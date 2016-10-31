@@ -1,0 +1,60 @@
+version: "2"
+services:
+    namenode:
+      hostname: namenode
+      container_name: namenode
+      image: 'islammohamedabdelaziz/ocono-spark'
+      ports:
+        - "8088:8088"
+        - "50075:50075"
+        - "50070:50070"
+        - "9000:9000"
+        - "50990:50990"
+        - "8080:8080"
+      command: " -namenode"
+
+
+    datanode01:
+      image: 'islammohamedabdelaziz/ocono-spark'
+      hostname: datanode01
+      container_name: datanode01
+      links:
+          - "namenode:namenode"
+      command: " -datanode"
+      depends_on:
+        - namenode
+
+    datanode02:
+      image: 'islammohamedabdelaziz/ocono-spark'
+      hostname: datanode02
+      container_name: datanode02
+      links:
+          - "namenode:namenode"
+      command: "-datanode"
+      depends_on:
+        - namenode
+
+
+    datanode03:
+      image: 'islammohamedabdelaziz/ocono-spark'
+      hostname: datanode03
+      container_name: datanode03
+      links:
+          - "namenode:namenode"
+      command: " -datanode"
+      depends_on:
+        - namenode
+
+
+    spark:
+        image: 'islammohamedabdelaziz/ocono-spark'
+        hostname: spark
+        links:
+           - "namenode:namenode"
+        ports:
+           - "4040:4040"
+        hostname: spark
+        #dns: "docker inspect --format=\"{{ .NetworkSettings.IPAddress }}\" namenode"
+        command: "-d"
+        depends_on:
+          - namenode
